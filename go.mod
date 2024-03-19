@@ -1,4 +1,4 @@
-module go.mod
+module github.com/cavinhartono/todolist-restapi
 
 go 1.18
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/cavinhartono/controllers"
-	"github.com/cavinhartono/models"
+	"github.com/cavinhartono/todolist-restapi/controllers"
+	"github.com/cavinhartono/todolist-restapi/models"
 )
 
 func main()  {

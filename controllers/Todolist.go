@@ -1,72 +1,70 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+
+	"todolist-restapi/models"
+
 	"github.com/gin-gonic/gin"
-	"github.com/cavinhartono/models"
 )
 
-var products = []Product {
-	{ ID: 1, Name: "Vans Oldschool", Price: 600 },
-	{ ID: 2, Name: "Adidas Gazelle", Price: 700 },
-	{ ID: 3, Name: "Cosmic Green Shirt", Price: 120 },
+func CreateBook(c *gin.Context) {
+	var book models.Book
+	c.BindJSON(&book)
+	err := models.CreateBook(&book)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, book)
+	}
 }
 
-func createProducts(c *gin.Context) {
-	var newProduct Product
-	
-	if err := c.BindJSON(&newProduct); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-		return
+func UpdateBook(c *gin.Context) {
+	var book models.Book
+	id := c.Params.ByName("id")
+	err := models.GetBookByID(&book, id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, book)
 	}
-	
-	products = append(products, newProduct)
-	c.JSON(http.StatusCreated, newProduct)
+	c.BindJSON(&book)
+	err = models.UpdateBook(&book, id)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, book)
+	}
 }
 
-func updateProducts(c *gin.Context) {
-	id := c.Param("id")
-	var updatedProduct Product
-		
-	if err := c.BindJSON(&updatedProduct); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
-		return
+func DeleteBook(c *gin.Context) {
+	var book models.Book
+	id := c.Params.ByName("id")
+	err := models.DeleteBook(&book, id)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"id" + id: "is deleted"})
 	}
-
-	for i, product := range products {
-		if product.ID == id {
-			products[i] = updatedProduct
-			c.JSON(http.StatusOK, updatedProduct)
-			return
-		}
-	}
-	c.JSON(http.StatusNotFound, gin.H{ "error": "Product not found" })
 }
 
-func deleteProducts(c *gin.Context) {
-	id := c.Param("id")
-	
-	for i, product := range products {
-		if product.ID == id {
-			products = append(products[:i], products[i+1:]...)
-			c.JSON(http.StatusOK, gin.H{ "message": "Product is deleted" })
-			return
-		}
+func GetAllBooks(c *gin.Context) {
+	var book []models.Book
+	err := models.GetAllBooks(&book)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, book)
 	}
-	c.JSON(http.StatusNotFound, gin.H{ "error": "Product not found" })
 }
 
-func getAllProducts(c *gin.Context) {
-	c.JSON(http.StatusOK, products)
-}
-
-func getProducts(c *gin.Context) {
-	id := c.Param("id")
-	for _, product := range products {
-		if product.ID == id {
-			c.JSON(http.StatusOK, product)
-			return
-		}
+func GetBookByID(c *gin.Context) {
+	id := c.Params.ByName("id")
+	var book models.Book
+	err := models.GetBookByID(&book, id)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, book)
 	}
-	c.JSON(http.StatusNotFound, gin.H{ "error": "Product not found" })
 }

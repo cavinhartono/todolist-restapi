@@ -1,6 +1,12 @@
-### RESTAPI using Golang and Gin
+### REST API using Golang and Gin
 
 ---
+
+Run in Git Bash or Terminal:
+
+```bash
+$ go run main.go
+```
 
 1. Get All Albums
 
@@ -47,12 +53,22 @@ $ curl localhost:8080/3
 
 Output:
 
+- Success:
+
 ```json
 {
   "id": "2",
   "title": "The Car",
   "artist": "Arctic Monkeys",
   "price": 39.99
+}
+```
+
+- Failed:
+
+```bash
+{
+  "message": "album not found"
 }
 ```
 
@@ -117,12 +133,22 @@ $ curl http://localhost:8080/albums/4 \
 
 Output:
 
+Success:
+
 ```json
 {
   "id": "4",
   "title": "Unlimited Love",
   "artist": "Red Hot Chili Peppers",
   "price": 49.99
+}
+```
+
+Failed:
+
+```bash
+{
+    "message": "album not found"
 }
 ```
 
@@ -140,6 +166,8 @@ $ curl http://localhost:8080/albums/4 \
 
 Output in Git Bash:
 
+- Success
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -149,7 +177,17 @@ Content-Length: 27
 {"message":"album deleted"}
 ```
 
+- Failed:
+
+```bash
+{
+    "message": "album not found"
+}
+```
+
 Output in Get All Albums:
+
+- Success
 
 ```json
 [
@@ -172,4 +210,12 @@ Output in Get All Albums:
     "price": 49.99
   }
 ]
+```
+
+- Failed:
+
+```bash
+{
+    "message": "album not found"
+}
 ```
